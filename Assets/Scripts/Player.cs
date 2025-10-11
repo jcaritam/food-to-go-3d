@@ -2,10 +2,10 @@ using System;
 using System.Net.NetworkInformation;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IKitchenObjectParent
 {
 
-  public  static Player Instance { get; private set; }
+  public static Player Instance { get; private set; }
 
   public event EventHandler<OnSelectedCounterChangedEventArgs> OnSelectedCounterChanged;
   public class OnSelectedCounterChangedEventArgs : EventArgs
@@ -17,14 +17,16 @@ public class Player : MonoBehaviour
   [SerializeField] private float rotateSpeed = 10f;
   [SerializeField] private GameInput gameInput;
   [SerializeField] private LayerMask countersLayerMask;
+  [SerializeField] private Transform KitchenObjectHoldPoint;
 
   private Vector3 lastInteractDir;
   private ClearCounter selectedCounter;
+  private KitchenObject kitchenObject;
 
 
-  private void Awake ()
+  private void Awake()
   {
-    if(Instance != null)
+    if (Instance != null)
     {
       Debug.LogError("instance error - null");
     }
@@ -41,7 +43,7 @@ public class Player : MonoBehaviour
   {
     if (selectedCounter != null)
     {
-      selectedCounter.Interact();
+      selectedCounter.Interact(this);
     }
   }
 
@@ -122,5 +124,30 @@ public class Player : MonoBehaviour
     {
       selectedCounter = selectedCounter
     });
+  }
+
+  public Transform GetKitchenObjectFollowTransform()
+  {
+    return KitchenObjectHoldPoint;
+  }
+
+  public void SetKitchenObject(KitchenObject kitchenObject)
+  {
+    this.kitchenObject = kitchenObject;
+  }
+
+  public KitchenObject GetKitchenObject()
+  {
+    return kitchenObject;
+  }
+
+  public void ClearKitchenObject()
+  {
+    kitchenObject = null;
+  }
+
+  public bool HasKitchenObject()
+  {
+    return kitchenObject != null;
   }
 }
