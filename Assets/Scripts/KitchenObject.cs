@@ -14,9 +14,9 @@ public class KitchenObject : MonoBehaviour
     public void SetKitchenObjectParent(IKitchenObjectParent kitchenObjectParent)
     {
         if (this.kitchenObjectParent != null)
-    {
+        {
             this.kitchenObjectParent.ClearKitchenObject();
-    }
+        }
         this.kitchenObjectParent = kitchenObjectParent;
 
         if (kitchenObjectParent.HasKitchenObject())
@@ -24,14 +24,54 @@ public class KitchenObject : MonoBehaviour
             Debug.Log("IKitchenObjectParent already has a kitchenObject");
         }
 
-        kitchenObjectParent.SetKitchenObject(this);    
-    
+        kitchenObjectParent.SetKitchenObject(this);
+
         transform.parent = kitchenObjectParent.GetKitchenObjectFollowTransform();
         transform.localPosition = Vector3.zero;
     }
 
     public IKitchenObjectParent GetKitchenObjectParent()
-  {
+    {
         return kitchenObjectParent;
-  }
+    }
+
+    public void DestroySelf()
+    {
+        kitchenObjectParent.ClearKitchenObject();
+        Destroy(gameObject);
+    }
+
+    public static KitchenObject SpawnKitchenObject(
+        KitchenObjectsSO kitchenObjectSO,
+        IKitchenObjectParent kitchenObjectParent
+    )
+    {
+        if (kitchenObjectSO == null)
+        {
+            Debug.LogError("❌ kitchenObjectSO es NULL en SpawnKitchenObject!");
+            return null;
+        }
+
+        if (kitchenObjectSO.prefab == null)
+        {
+            Debug.LogError($"❌ El prefab en {kitchenObjectSO.name} no está asignado!");
+            return null;
+        }
+
+        if (kitchenObjectParent == null)
+        {
+            Debug.LogError("❌ kitchenObjectParent es NULL en SpawnKitchenObject!");
+            return null;
+        }
+    
+        Transform kitchenObjectTransform = Instantiate(
+            kitchenObjectSO.prefab,
+            kitchenObjectParent.GetKitchenObjectFollowTransform().position,
+            Quaternion.identity
+        );
+        KitchenObject kitchenObject = kitchenObjectTransform.GetComponent<KitchenObject>();
+        kitchenObject.SetKitchenObjectParent(kitchenObjectParent);
+
+        return kitchenObject;
+    }
 }
