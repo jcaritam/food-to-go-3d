@@ -41,6 +41,22 @@ public class KitchenObject : MonoBehaviour
         Destroy(gameObject);
     }
 
+    public bool TryGetPlate(out PlateKitchenObject plateKitchenObject)
+    {
+
+        if (this is PlateKitchenObject)
+        {
+            plateKitchenObject = this as PlateKitchenObject;
+            return true;
+        }
+        else
+        {
+            plateKitchenObject = null;
+            return false;
+        }
+    }
+
+
     public static KitchenObject SpawnKitchenObject(
         KitchenObjectsSO kitchenObjectSO,
         IKitchenObjectParent kitchenObjectParent
@@ -63,7 +79,7 @@ public class KitchenObject : MonoBehaviour
             Debug.LogError("❌ kitchenObjectParent es NULL en SpawnKitchenObject!");
             return null;
         }
-    
+
         Transform kitchenObjectTransform = Instantiate(
             kitchenObjectSO.prefab,
             kitchenObjectParent.GetKitchenObjectFollowTransform().position,
