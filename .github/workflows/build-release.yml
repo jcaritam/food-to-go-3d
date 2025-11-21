@@ -1,0 +1,22 @@
+name: CI Unity Web Build and release
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build_release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+      
+      - name: build Web
+        id: build
+        uses: game-ci/unity-builder@v4
+        with:
+          targetPlatform: WebGL
