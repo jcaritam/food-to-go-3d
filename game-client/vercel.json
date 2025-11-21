@@ -1,0 +1,23 @@
+{
+  "headers": [
+    {
+      "source": "/(.*)\\.br",
+      "headers": [
+        { "key": "Content-Encoding", "value": "br" }
+      ]
+    },
+    {
+      "source": "/(.*)\\.wasm\\.br",
+      "headers": [
+        { "key": "Content-Type", "value": "application/wasm" }
+      ]
+    }
+  ],
+  "compress": false,
+  "rewrites": [
+    {
+      "source": "/(.*)\\.br",
+      "destination": "/$1.br"
+    }
+  ]
+}
