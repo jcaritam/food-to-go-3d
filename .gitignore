@@ -110,3 +110,9 @@ ServerData
 /game-client/.cache
 /game-client/.env.local
 /game-client/.env.development.local
+
+!/game-client/public/build-web/
+
+# Opcional: Si necesitas ser más específico:
+!/game-client/public/build-web/Build/
+!/game-client/public/build-web/TemplateData/
