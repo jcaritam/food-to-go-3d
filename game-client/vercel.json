@@ -12,12 +12,5 @@
         { "key": "Content-Type", "value": "application/wasm" }
       ]
     }
-  ],
-  "compress": false,
-  "rewrites": [
-    {
-      "source": "/(.*)\\.br",
-      "destination": "/$1.br"
-    }
   ]
 }
