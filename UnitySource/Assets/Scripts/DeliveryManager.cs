@@ -14,6 +14,7 @@ public class DeliveryManager : MonoBehaviour
 
     [SerializeField] private RecipeListSO recipeListSO;
     private List<RecipeSO> waitingRecipeSOList;
+    private List<RecipeSO> completeRecipeSOList;
     private float spawnRecipeTimer;
     private float spawnRecipeTimerMax = 4f;
     private int waitingRecipeMax = 4;
@@ -22,6 +23,7 @@ public class DeliveryManager : MonoBehaviour
     {
         Instance = this;
         waitingRecipeSOList = new List<RecipeSO>();
+        completeRecipeSOList = new List<RecipeSO>();
     }
 
     private void Update()
@@ -58,6 +60,7 @@ public class DeliveryManager : MonoBehaviour
                     {
                         if (plateKitchenObjectSO == recipeKitchenObjectSO)
                         {
+                            
                             ingredientFound = true;
                             break;
                         }
@@ -72,6 +75,7 @@ public class DeliveryManager : MonoBehaviour
 
                 if (plateContentsMatchesRecipe)
                 {
+                    completeRecipeSOList.Add(waitingRecipeSO);
                     waitingRecipeSOList.RemoveAt(i);
                     OnRecipeComplete?.Invoke(this, EventArgs.Empty);
                     OnRecipeSuccess?.Invoke(this, EventArgs.Empty);
@@ -83,6 +87,11 @@ public class DeliveryManager : MonoBehaviour
         Debug.Log("el jugador no entrega el pedido");
         OnRecipeFailed?.Invoke(this, EventArgs.Empty);
     }
+
+    public List<RecipeSO> GetCompleteRecipeSOList()
+  {
+    return completeRecipeSOList;
+  }
 
     public List<RecipeSO> GetWaitingRecipeSOList()
     {
