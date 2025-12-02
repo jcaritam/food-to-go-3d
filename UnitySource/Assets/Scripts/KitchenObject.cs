@@ -79,7 +79,10 @@ public class KitchenObject : MonoBehaviour
             Debug.LogError("❌ kitchenObjectParent es NULL en SpawnKitchenObject!");
             return null;
         }
-
+        Debug.Log("Primero");
+        Debug.Log(kitchenObjectSO);
+        Debug.Log("parent");
+        Debug.Log(kitchenObjectParent);
         Transform kitchenObjectTransform = Instantiate(
             kitchenObjectSO.prefab,
             kitchenObjectParent.GetKitchenObjectFollowTransform().position,
