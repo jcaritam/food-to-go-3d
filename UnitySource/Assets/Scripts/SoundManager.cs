@@ -58,6 +58,14 @@ public class SoundManager : MonoBehaviour
   }
   private void PlaySound(AudioClip audioClip, Vector3 position, float volume = 1f)
   {
-    AudioSource.PlayClipAtPoint(audioClip, position, volume);
+    #if !UNITY_WEBGL
+      if (audioClip == null){
+        Debug.Log("Intentando reproducir un audio nulo");
+        return;
+      }
+      AudioSource.PlayClipAtPoint(audioClip, position, volume);
+
+    #endif
+
   }
 }
