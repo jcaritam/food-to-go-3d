@@ -16,8 +16,18 @@ function App() {
                 Controles
               </div>
               <p className="text-sm text-foreground">
-                W-A-S-D para movimiento, Espacio para interactuar
+                W-A-S-D para movimiento
               </p>
+              <p>
+                Espacio para aumentar velocidad
+              </p>
+              <p>
+                Q para picar
+              </p>
+              <p>
+                E para seleccionar objecto
+              </p>
+
             </div>
             <div className="bg-card border border-border/30 rounded-lg p-4">
               <div className="text-xs text-muted-foreground mb-2 uppercase tracking-wider">
