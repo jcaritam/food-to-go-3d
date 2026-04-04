@@ -113,6 +113,7 @@ CLAUDE.md
 /game-client/.env.development.local
 
 !/game-client/public/build-web/
+game-client/public/CHANGELOG.md
 
 # Opcional: Si necesitas ser más específico:
 !/game-client/public/build-web/Build/
