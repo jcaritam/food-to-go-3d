@@ -1,10 +1,11 @@
+import { VERSION_LABEL } from "../lib/version"
 
 export const Footer = () => {
   return (
     <footer className="border-t border-border/30">
-      <div className="max-w-7xl mx-auto px-6 py-4">
+      <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
         <p className="text-xs text-muted-foreground">
-          Powered by{" "}
+          Desarrollado por{" "}
           <a
             href="https://github.com/jcaritam"
             target="_blank"
@@ -14,7 +15,8 @@ export const Footer = () => {
             @jcaritam
           </a>
         </p>
+        <p className="text-xs text-muted-foreground font-mono">{VERSION_LABEL}</p>
       </div>
     </footer>
-  );
-};
+  )
+}
