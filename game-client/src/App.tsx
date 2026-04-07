@@ -1,47 +1,27 @@
-import Navbar from "./components/navbar";
-import Game from "./components/game";
-import { Footer } from "./components/footer";
+import Navbar from "./components/navbar"
+import Game from "./components/game"
+import { Footer } from "./components/footer"
+import { ControlsSection } from "./components/controls-section"
+import { AboutSection } from "./components/about-section"
+import { ChangelogSection } from "./components/changelog-section"
+import { CreditsSection } from "./components/credits-section"
 
 function App() {
   return (
     <div className="min-h-screen bg-[#0a0a0a] flex flex-col">
       <Navbar />
-      <main className="flex-1 flex items-center justify-center px-6 py-12">
-        <div className="w-full max-w-6xl">
+      <main className="flex-1 px-6 py-12">
+        <div className="w-full max-w-6xl mx-auto">
           <Game />
-
-          <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-card border border-border/30 rounded-lg p-4">
-              <div className="text-xs text-muted-foreground mb-2 uppercase tracking-wider">
-                Controles
-              </div>
-              <p className="text-sm text-foreground">
-                W-A-S-D para movimiento
-              </p>
-              <p>
-                Espacio para aumentar velocidad
-              </p>
-              <p>
-                Q para picar
-              </p>
-              <p>
-                E para seleccionar objecto
-              </p>
-
-            </div>
-            <div className="bg-card border border-border/30 rounded-lg p-4">
-              <div className="text-xs text-muted-foreground mb-2 uppercase tracking-wider">
-                Objetivo
-              </div>
-              <p className="text-sm text-foreground">Prepara y sirve platos</p>
-            </div>
-          </div>
+          <ControlsSection />
+          <AboutSection />
+          {!import.meta.env.DEV && <ChangelogSection />}
+          <CreditsSection />
         </div>
       </main>
-
       <Footer />
     </div>
-  );
+  )
 }
 
-export default App;
+export default App

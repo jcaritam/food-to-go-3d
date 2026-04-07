@@ -54,7 +54,7 @@ ExportedObj/
 *.mdb
 *.opendb
 *.VC.db
-
+AGENTS.md
 # Unity3D generated meta files
 *.pidb.meta
 *.pdb.meta
@@ -88,7 +88,8 @@ ServerData
 # files in platform-specific subfolders, for example:
 # /Assets/AddressableAssetsData/OSX/addressables_content_state.bin
 [Aa]ssets/AddressableAssetsData/*/*.bin*
-
+CLAUDE.md
+~/*/CLAUDE.md
 # Visual Scripting auto-generated files
 [Aa]ssets/Unity.VisualScripting.Generated/VisualScripting.Flow/UnitOptions.db
 [Aa]ssets/Unity.VisualScripting.Generated/VisualScripting.Flow/UnitOptions.db.meta
@@ -112,7 +113,11 @@ ServerData
 /game-client/.env.development.local
 
 !/game-client/public/build-web/
+game-client/public/CHANGELOG.md
 
 # Opcional: Si necesitas ser más específico:
 !/game-client/public/build-web/Build/
 !/game-client/public/build-web/TemplateData/
+~/
+AGENT.md
+ROADMAP.md
