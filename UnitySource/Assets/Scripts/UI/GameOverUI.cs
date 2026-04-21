@@ -6,19 +6,26 @@ using UnityEngine.UI;
 
 public class GameOverUI : MonoBehaviour
 {
-      [SerializeField] private TextMeshProUGUI recipesDeliveredText;
-      [SerializeField] private TextMeshProUGUI pointsText;
-      [SerializeField] private Button menuButton;
+    [SerializeField] private TextMeshProUGUI gameOverTitleText;
+    [SerializeField] private TextMeshProUGUI recipesDeliveredText;
+    [SerializeField] private TextMeshProUGUI pointsText;
+    [SerializeField] private TextMeshProUGUI timeText;
+    [SerializeField] private TextMeshProUGUI errorsText;
+    [SerializeField] private TextMeshProUGUI unlockText;
+    [SerializeField] private Image[] starImages;
+    [SerializeField] private Sprite starGoldSprite;
+    [SerializeField] private Sprite starEmptySprite;
+    [SerializeField] private Button menuButton;
+    [SerializeField] private Button retryButton;
 
-  private void Awake()
-  {
-    menuButton.onClick.AddListener(() =>
+    private void Awake()
     {
-        Loader.Load(Loader.Scene.MenuScene);
-    });
-  }
+        menuButton.onClick.AddListener(() => Loader.Load(Loader.Scene.LevelSelectScene));
+        if (retryButton != null)
+            retryButton.onClick.AddListener(() => Loader.Load(Loader.Scene.GameScene));
+    }
 
-  private void Start()
+    private void Start()
     {
         KitchenGameManager.Instance.OnStateChanged += KitchenGameManager_OnStateChanged;
         Hide();
@@ -26,25 +33,70 @@ public class GameOverUI : MonoBehaviour
 
     private void KitchenGameManager_OnStateChanged(object sender, EventArgs e)
     {
-        if (KitchenGameManager.Instance.IsGameOver())
-        {
-            Show();
-             recipesDeliveredText.text = DeliveryManager.Instance.GetCompleteRecipeSOList().Count.ToString();
-             pointsText.text = DeliveryManager.Instance.GetCompleteRecipeSOList().Sum(v => v.points).ToString();
-        }
-        else
+        if (!KitchenGameManager.Instance.IsGameOver())
         {
             Hide();
+            return;
+        }
+
+        var manager = KitchenGameManager.Instance;
+        int score = DeliveryManager.Instance.GetCompleteRecipeSOList().Sum(r => r.points);
+        int stars = manager.levelConfig != null ? manager.levelConfig.CalculateStars(score) : 0;
+
+        LevelProgressData.SaveLevelRecord(manager.levelId, score, stars);
+
+        int required = manager.levelConfig != null ? manager.levelConfig.requiredStarsToUnlock : 1;
+        bool levelComplete = stars >= required;
+
+        if (levelComplete)
+        {
+            int nextLevel = manager.levelId + 1;
+            LevelProgressData.UnlockLevel(nextLevel);
+        }
+
+        if (gameOverTitleText != null)
+            gameOverTitleText.text = levelComplete ? "¡Nivel Completo!" : "¡Nivel Incompleto!";
+
+        if (unlockText != null)
+            unlockText.gameObject.SetActive(levelComplete);
+
+        recipesDeliveredText.text = DeliveryManager.Instance.GetCompleteRecipeSOList().Count.ToString();
+        pointsText.text = score.ToString();
+
+        if (timeText != null)
+        {
+            float elapsed = KitchenGameManager.Instance.GetGamePlayingTimerMax();
+            int minutes = Mathf.FloorToInt(elapsed / 60f);
+            int seconds = Mathf.FloorToInt(elapsed % 60f);
+            timeText.text = $"{minutes}:{seconds:00}";
+        }
+
+        if (errorsText != null)
+            errorsText.text = DeliveryManager.Instance.GetFailedRecipeCount().ToString();
+
+        UpdateStarImages(stars);
+
+        Show();
+    }
+
+    private void UpdateStarImages(int stars)
+    {
+        if (starImages == null) return;
+        for (int i = 0; i < starImages.Length; i++)
+        {
+            if (starImages[i] == null) continue;
+            bool earned = i < stars;
+            if (starGoldSprite != null && starEmptySprite != null)
+                starImages[i].sprite = earned ? starGoldSprite : starEmptySprite;
+            else
+            {
+                Color c = starImages[i].color;
+                c.a = earned ? 1f : 0.25f;
+                starImages[i].color = c;
+            }
         }
     }
 
-    private void Show()
-    {
-        gameObject.SetActive(true);
-    }
-
-    private void Hide()
-    {
-        gameObject.SetActive(false);
-    }
+    private void Show() => gameObject.SetActive(true);
+    private void Hide() => gameObject.SetActive(false);
 }

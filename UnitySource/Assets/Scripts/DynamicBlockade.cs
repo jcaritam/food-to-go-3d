@@ -51,7 +51,8 @@ public class DynamicBlockade : MonoBehaviour
 
     while (elapsedTime < duration)
     {
-      transform.position = Vector3.Lerp(currentPos, targetPos, (elapsedTime / duration));
+      float t = elapsedTime / duration;
+      transform.position = Vector3.Lerp(currentPos, targetPos, t * t * (3f - 2f * t));
       elapsedTime += Time.deltaTime;
       yield return null;
     }

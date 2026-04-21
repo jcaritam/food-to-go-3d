@@ -5,6 +5,10 @@ public class KitchenGameManager : MonoBehaviour
 {
     public static KitchenGameManager Instance { get; private set; }
     public event EventHandler OnStateChanged;
+
+    [SerializeField] public int levelId = 1;
+    [SerializeField] public LevelConfigSO levelConfig;
+
     private enum State
     {
         WAITING_TO_START,
@@ -31,7 +35,6 @@ public class KitchenGameManager : MonoBehaviour
         {
             case State.WAITING_TO_START:
                 waitingToStartTimer -= Time.deltaTime;
-
                 if (waitingToStartTimer < 0f)
                 {
                     state = State.COUNTDOWN_TO_START;
@@ -40,7 +43,6 @@ public class KitchenGameManager : MonoBehaviour
                 break;
             case State.COUNTDOWN_TO_START:
                 countdownToStartTimer -= Time.deltaTime;
-
                 if (countdownToStartTimer < 0f)
                 {
                     state = State.GAME_PLAYING;
@@ -50,7 +52,6 @@ public class KitchenGameManager : MonoBehaviour
                 break;
             case State.GAME_PLAYING:
                 gamePlayingTimer -= Time.deltaTime;
-
                 if (gamePlayingTimer < 0f)
                 {
                     state = State.GAME_OVER;
@@ -58,33 +59,14 @@ public class KitchenGameManager : MonoBehaviour
                 }
                 break;
             case State.GAME_OVER:
-
                 break;
         }
     }
 
-    public bool IsGamePlaying()
-    {
-        return state == State.GAME_PLAYING;
-    }
-
-    public bool IsCountdownToStartActive()
-    {
-        return state == State.COUNTDOWN_TO_START;
-    }
-
-    public bool IsGameOver()
-  {
-    return state == State.GAME_OVER;
-  } 
-
-    public float GetCountdownToStartTimer()
-    {
-        return countdownToStartTimer;
-    }
-
-    public float GetGamePlayingTimerNormalized()
-  {
-    return 1 - (gamePlayingTimer / gamePlayingTimerMax);
-  }
+    public bool IsGamePlaying() => state == State.GAME_PLAYING;
+    public bool IsCountdownToStartActive() => state == State.COUNTDOWN_TO_START;
+    public bool IsGameOver() => state == State.GAME_OVER;
+    public float GetCountdownToStartTimer() => countdownToStartTimer;
+    public float GetGamePlayingTimerNormalized() => 1 - (gamePlayingTimer / gamePlayingTimerMax);
+    public float GetGamePlayingTimerMax() => gamePlayingTimerMax;
 }
