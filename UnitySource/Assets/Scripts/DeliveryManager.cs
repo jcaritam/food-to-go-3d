@@ -18,6 +18,7 @@ public class DeliveryManager : MonoBehaviour
     private float spawnRecipeTimer;
     private float spawnRecipeTimerMax = 4f;
     private int waitingRecipeMax = 4;
+    private int failedRecipeCount;
 
     private void Awake()
     {
@@ -84,7 +85,8 @@ public class DeliveryManager : MonoBehaviour
             }
         }
 
-        // Debug.Log("el jugador no entrega el pedido");
+        if (waitingRecipeSOList.Count > 0)
+            failedRecipeCount++;
         OnRecipeFailed?.Invoke(this, EventArgs.Empty);
     }
 
@@ -97,4 +99,6 @@ public class DeliveryManager : MonoBehaviour
     {
         return waitingRecipeSOList;
     }
+
+    public int GetFailedRecipeCount() => failedRecipeCount;
 }
