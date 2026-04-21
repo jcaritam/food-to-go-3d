@@ -58,14 +58,18 @@ public class SoundManager : MonoBehaviour
   }
   private void PlaySound(AudioClip audioClip, Vector3 position, float volume = 1f)
   {
-    #if !UNITY_WEBGL
-      if (audioClip == null){
-        Debug.Log("Intentando reproducir un audio nulo");
-        return;
-      }
+    if (audioClip == null) return;
+
+    #if UNITY_WEBGL
+      var go = new GameObject("OneShotAudio");
+      var source = go.AddComponent<AudioSource>();
+      source.clip = audioClip;
+      source.volume = volume;
+      source.spatialBlend = 0f;
+      source.Play();
+      Destroy(go, audioClip.length + 0.1f);
+    #else
       AudioSource.PlayClipAtPoint(audioClip, position, volume);
-
     #endif
-
   }
 }
