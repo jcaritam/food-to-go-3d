@@ -11,10 +11,11 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e69c3dd7fa678efbc8199ad0ca4bd2fa, type: 3}
   m_Name: Causa
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   kitchenObjectSOList:
   - {fileID: 11400000, guid: 000a33a99e2042e18a5aaf82ffe04b83, type: 2}
   - {fileID: 11400000, guid: 622c2f70843c45eab94e653c39dbf50d, type: 2}
   - {fileID: 11400000, guid: b6e02fa10b654115a1bd72f5dfb2fd6f, type: 2}
   recipeName: Causa
   points: 15
+  finalDishSprite: {fileID: 21300000, guid: b09c8386cd2af457f91a9a9dea11ad7f, type: 3}

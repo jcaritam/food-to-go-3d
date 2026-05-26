@@ -37,10 +37,17 @@ public class LevelSelectUI : MonoBehaviour
 
     private IEnumerator WaitForService()
     {
-        while (CloudProgressService.Instance == null || !CloudProgressService.Instance.IsReady)
+        float timeout = 5f;
+        float elapsed = 0f;
+
+        while ((CloudProgressService.Instance == null || !CloudProgressService.Instance.IsReady) && elapsed < timeout)
+        {
+            elapsed += Time.deltaTime;
             yield return null;
+        }
 
         if (loadingIndicator != null) loadingIndicator.SetActive(false);
+        SetButtonsInteractable(true);
         yield return RefreshAllAsync();
         SelectButton(0);
         ready = true;

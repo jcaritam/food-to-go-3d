@@ -18,3 +18,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: a5412bcd5d1b8ab38b35b0093da1af06, type: 2}
   recipeName: CheeseBurger
   points: 30
+  finalDishSprite: {fileID: 21300000, guid: b09c8386cd2af457f91a9a9dea11ad7f, type: 3}

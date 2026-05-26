@@ -20,3 +20,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: aedbed9bf2d252d4abea0ad8f51fe076, type: 2}
   recipeName: MegaBurger
   points: 50
+  finalDishSprite: {fileID: 21300000, guid: b09c8386cd2af457f91a9a9dea11ad7f, type: 3}

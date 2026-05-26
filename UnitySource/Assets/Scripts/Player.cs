@@ -49,6 +49,12 @@ public class Player : MonoBehaviour, IKitchenObjectParent
         gameInput.OnInteractAction += GameInput_OnInteractAction;
         gameInput.OnInteractAlternateAction += GameInput_OnInteractAlternateAction;
         gameInput.OnDashAction += GameInput_OnDashAction;
+        gameInput.OnPauseAction += GameInput_OnPauseAction;
+    }
+
+    private void GameInput_OnPauseAction(object sender, EventArgs e)
+    {
+        KitchenGameManager.Instance.TogglePause();
     }
 
     private void GameInput_OnDashAction(object sender, EventArgs e)
@@ -113,6 +119,8 @@ public class Player : MonoBehaviour, IKitchenObjectParent
 
     private void HandleInteractions()
     {
+        if (KitchenGameManager.Instance.IsGamePaused()) return;
+
         Vector2 inputVector = gameInput.GetMovementVectorNormalized();
 
         Vector3 moveDir = new Vector3(inputVector.x, 0f, inputVector.y);
@@ -146,6 +154,8 @@ public class Player : MonoBehaviour, IKitchenObjectParent
 
     private void HandleMovementCharacter()
     {
+        if (KitchenGameManager.Instance.IsGamePaused()) return;
+
         Vector2 inputVector = gameInput.GetMovementVectorNormalized();
 
         Vector3 moveDir = new Vector3(inputVector.x, 0f, inputVector.y);
