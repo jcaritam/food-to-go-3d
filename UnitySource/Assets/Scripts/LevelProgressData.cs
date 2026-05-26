@@ -7,18 +7,25 @@ public static class LevelProgressData
         if (levelIndex == 1) return true;
         if (CloudProgressService.Instance != null)
             return CloudProgressService.Instance.IsLevelUnlocked(levelIndex);
-        return PlayerPrefs.GetInt("level_unlocked_" + levelIndex, 0) == 1;
+        var csv = PlayerPrefs.GetString("unlocked_levels", "1");
+        foreach (var part in csv.Split(','))
+            if (int.TryParse(part.Trim(), out int n) && n == levelIndex)
+                return true;
+        return false;
     }
 
     public static void UnlockLevel(int levelIndex)
     {
         if (CloudProgressService.Instance != null)
-            CloudProgressService.Instance.UnlockLevel(levelIndex);
-        else
         {
-            PlayerPrefs.SetInt("level_unlocked_" + levelIndex, 1);
-            PlayerPrefs.Save();
+            CloudProgressService.Instance.UnlockLevel(levelIndex);
+            return;
         }
+        var csv = PlayerPrefs.GetString("unlocked_levels", "1");
+        var parts = new System.Collections.Generic.HashSet<string>(csv.Split(','));
+        parts.Add(levelIndex.ToString());
+        PlayerPrefs.SetString("unlocked_levels", string.Join(",", parts));
+        PlayerPrefs.Save();
     }
 
     public static CloudProgressService.LevelRecord GetLevelRecord(int levelId)

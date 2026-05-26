@@ -55,10 +55,13 @@ public class LevelSelectUI : MonoBehaviour
 
     private System.Collections.IEnumerator RefreshAllAsync()
     {
-        foreach (var lb in levelButtons)
+        if (CloudProgressService.Instance != null)
         {
-            var task = CloudProgressService.Instance.LoadLevelRecordAsync(lb.levelIndex);
-            yield return new WaitUntil(() => task.IsCompleted);
+            foreach (var lb in levelButtons)
+            {
+                var task = CloudProgressService.Instance.LoadLevelRecordAsync(lb.levelIndex);
+                yield return new WaitUntil(() => task.IsCompleted);
+            }
         }
         RefreshLockStates();
     }
