@@ -121,3 +121,7 @@ game-client/public/CHANGELOG.md
 ~/
 AGENT.md
 ROADMAP.md
+UnitySource/docs/
+
+# macOS metadata
+**/.DS_Store

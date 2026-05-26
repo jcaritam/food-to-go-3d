@@ -39,11 +39,11 @@ public class DeliveryManagerUI : MonoBehaviour
             Destroy(child.gameObject);
         }
 
-        foreach (RecipeSO recipeSO in DeliveryManager.Instance.GetWaitingRecipeSOList())
+        foreach (DeliveryManager.WaitingRecipe waitingRecipe in DeliveryManager.Instance.GetWaitingRecipeList())
         {
             Transform recipeTransform = Instantiate(recipeTemplate, container);
             recipeTransform.gameObject.SetActive(true);
-            recipeTransform.GetComponent<DeliveryManagerSingleUI>().SetRecipeSO(recipeSO);
+            recipeTransform.GetComponent<DeliveryManagerSingleUI>().SetRecipe(waitingRecipe);
         }
     }
 }

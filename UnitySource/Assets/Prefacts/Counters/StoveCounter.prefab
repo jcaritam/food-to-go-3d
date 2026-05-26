@@ -450,7 +450,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7586928080056364865, guid: 91cb9900f1101be65b9cbee32ef49276, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.037
+      value: -0.016
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -502,6 +502,7 @@ MonoBehaviour:
   counterTopPoint: {fileID: 5804667946801612489}
   fryingRecipeSOArray:
   - {fileID: 11400000, guid: 357b9f18f531cab219fcdc4c8ee55559, type: 2}
+  - {fileID: 11400000, guid: 9f4af224336e4e5c9c61682028f779e8, type: 2}
   burningRecipeSOArray:
   - {fileID: 11400000, guid: bcb80b6484644befca1bc58bf2cf3962, type: 2}
 --- !u!1001 &7055546986265950861
