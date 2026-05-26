@@ -8,8 +8,8 @@ public class DynamicBlockade : MonoBehaviour
   [SerializeField] private float transitionDuration = 1.5f;
 
   [Header("Rangos de Variación")]
-  [SerializeField] private float minTimeVisible = 40f;
-  [SerializeField] private float maxTimeVisible = 50f;
+  [SerializeField] private float minTimeVisible = 15f;
+  [SerializeField] private float maxTimeVisible = 25f;
   [SerializeField] private float minTimeHidden = 15f;
   [SerializeField] private float maxTimeHidden = 30f;
 
