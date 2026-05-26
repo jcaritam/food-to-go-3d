@@ -5,6 +5,8 @@ public class KitchenGameManager : MonoBehaviour
 {
     public static KitchenGameManager Instance { get; private set; }
     public event EventHandler OnStateChanged;
+    public event EventHandler OnGamePaused;
+    public event EventHandler OnGameUnpaused;
 
     [SerializeField] public int levelId = 1;
     [SerializeField] public LevelConfigSO levelConfig;
@@ -18,6 +20,7 @@ public class KitchenGameManager : MonoBehaviour
     }
 
     private State state;
+    private bool isGamePaused = false;
     private float waitingToStartTimer = 1f;
     private float countdownToStartTimer = 3f;
     private float gamePlayingTimer;
@@ -26,6 +29,7 @@ public class KitchenGameManager : MonoBehaviour
     private void Awake()
     {
         state = State.WAITING_TO_START;
+        gamePlayingTimer  = gamePlayingTimerMax;
         Instance = this;
     }
 
@@ -63,10 +67,29 @@ public class KitchenGameManager : MonoBehaviour
         }
     }
 
+    public void TogglePause()
+    {
+        if (!IsGamePlaying() && !IsCountdownToStartActive()) return;
+        isGamePaused = !isGamePaused;
+        if (isGamePaused)
+        {
+            Time.timeScale = 0f;
+            OnGamePaused?.Invoke(this, EventArgs.Empty);
+        }
+        else
+        {
+            Time.timeScale = 1f;
+            OnGameUnpaused?.Invoke(this, EventArgs.Empty);
+        }
+    }
+
+    public bool IsGamePaused() => isGamePaused;
     public bool IsGamePlaying() => state == State.GAME_PLAYING;
     public bool IsCountdownToStartActive() => state == State.COUNTDOWN_TO_START;
     public bool IsGameOver() => state == State.GAME_OVER;
     public float GetCountdownToStartTimer() => countdownToStartTimer;
     public float GetGamePlayingTimerNormalized() => 1 - (gamePlayingTimer / gamePlayingTimerMax);
     public float GetGamePlayingTimerMax() => gamePlayingTimerMax;
+
+    public float GetGamePlayingTimer() => gamePlayingTimer;
 }

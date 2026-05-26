@@ -7,4 +7,5 @@ public class RecipeSO : ScriptableObject
     public List<KitchenObjectsSO> kitchenObjectSOList;
     public string recipeName;
     public int points;
+    public Sprite finalDishSprite;
 }

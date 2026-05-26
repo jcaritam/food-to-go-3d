@@ -20,9 +20,19 @@ public class GameOverUI : MonoBehaviour
 
     private void Awake()
     {
-        menuButton.onClick.AddListener(() => Loader.Load(Loader.Scene.LevelSelectScene));
+        menuButton.onClick.AddListener(() =>
+        {
+            Time.timeScale = 1f;
+            Loader.Load(Loader.Scene.LevelSelectScene);
+        });
         if (retryButton != null)
-            retryButton.onClick.AddListener(() => Loader.Load(Loader.Scene.GameScene));
+            retryButton.onClick.AddListener(() =>
+            {
+                Time.timeScale = 1f;
+                int id = KitchenGameManager.Instance != null ? KitchenGameManager.Instance.levelId : 1;
+                Loader.Scene scene = id == 2 ? Loader.Scene.HuariqueScene : Loader.Scene.GameScene;
+                Loader.Load(scene);
+            });
     }
 
     private void Start()
@@ -40,7 +50,8 @@ public class GameOverUI : MonoBehaviour
         }
 
         var manager = KitchenGameManager.Instance;
-        int score = DeliveryManager.Instance.GetCompleteRecipeSOList().Sum(r => r.points);
+        int score = Mathf.Max(0, DeliveryManager.Instance.GetCompleteRecipeSOList().Sum(r => r.points)
+            - DeliveryManager.Instance.GetTotalPenaltyPoints());
         int stars = manager.levelConfig != null ? manager.levelConfig.CalculateStars(score) : 0;
 
         LevelProgressData.SaveLevelRecord(manager.levelId, score, stars);
@@ -65,7 +76,8 @@ public class GameOverUI : MonoBehaviour
 
         if (timeText != null)
         {
-            float elapsed = KitchenGameManager.Instance.GetGamePlayingTimerMax();
+            float elapsed = Mathf.Max(0f, KitchenGameManager.Instance.GetGamePlayingTimerMax()
+                - KitchenGameManager.Instance.GetGamePlayingTimer());
             int minutes = Mathf.FloorToInt(elapsed / 60f);
             int seconds = Mathf.FloorToInt(elapsed % 60f);
             timeText.text = $"{minutes}:{seconds:00}";

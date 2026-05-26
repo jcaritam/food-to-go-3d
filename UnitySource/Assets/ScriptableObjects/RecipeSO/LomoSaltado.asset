@@ -11,10 +11,11 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e69c3dd7fa678efbc8199ad0ca4bd2fa, type: 3}
   m_Name: LomoSaltado
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   kitchenObjectSOList:
   - {fileID: 11400000, guid: b83bc67ef44845939a941ee693fed057, type: 2}
   - {fileID: 11400000, guid: a7de0c110d0c45efa23df68958339a6c, type: 2}
   - {fileID: 11400000, guid: dcfc898a78244f258a90e7977975edd6, type: 2}
   recipeName: Lomo Saltado
   points: 35
+  finalDishSprite: {fileID: 21300000, guid: b09c8386cd2af457f91a9a9dea11ad7f, type: 3}

@@ -4,52 +4,74 @@ using UnityEngine;
 
 public class DeliveryManager : MonoBehaviour
 {
+    public class WaitingRecipe
+    {
+        public RecipeSO recipeSO;
+        public float timeRemaining;
+        public float timeMax;
+    }
+
     public event EventHandler OnRecipeSpawned;
     public event EventHandler OnRecipeComplete;
-
     public event EventHandler OnRecipeSuccess;
     public event EventHandler OnRecipeFailed;
+    public event EventHandler OnWrongDeliveryPenalty;
 
     public static DeliveryManager Instance { get; private set; }
 
     [SerializeField] private RecipeListSO recipeListSO;
-    private List<RecipeSO> waitingRecipeSOList;
+    [SerializeField] private float recipeTimeMax = 60f;
+
+    private List<WaitingRecipe> waitingRecipeList;
     private List<RecipeSO> completeRecipeSOList;
     private float spawnRecipeTimer;
     private float spawnRecipeTimerMax = 4f;
     private int waitingRecipeMax = 4;
     private int failedRecipeCount;
+    private int totalPenaltyPoints;
+    private const int WRONG_DELIVERY_PENALTY = 20;
 
     private void Awake()
     {
         Instance = this;
-        waitingRecipeSOList = new List<RecipeSO>();
+        waitingRecipeList = new List<WaitingRecipe>();
         completeRecipeSOList = new List<RecipeSO>();
     }
 
     private void Update()
     {
-        spawnRecipeTimer -= Time.deltaTime;
+        if (!KitchenGameManager.Instance.IsGamePlaying()) return;
 
+        spawnRecipeTimer -= Time.deltaTime;
         if (spawnRecipeTimer <= 0f)
         {
             spawnRecipeTimer = spawnRecipeTimerMax;
-
-            if (waitingRecipeSOList.Count < waitingRecipeMax)
+            if (waitingRecipeList.Count < waitingRecipeMax)
             {
-                RecipeSO waitingRecipeSO = recipeListSO.recipeSOList[UnityEngine.Random.Range(0, recipeListSO.recipeSOList.Count)];
-                // Debug.Log(waitingRecipeSO.recipeName);
-                waitingRecipeSOList.Add(waitingRecipeSO);
+                RecipeSO recipeSO = recipeListSO.recipeSOList[UnityEngine.Random.Range(0, recipeListSO.recipeSOList.Count)];
+                waitingRecipeList.Add(new WaitingRecipe { recipeSO = recipeSO, timeRemaining = recipeTimeMax, timeMax = recipeTimeMax });
                 OnRecipeSpawned?.Invoke(this, EventArgs.Empty);
+            }
+        }
+
+        for (int i = waitingRecipeList.Count - 1; i >= 0; i--)
+        {
+            waitingRecipeList[i].timeRemaining -= Time.deltaTime;
+            if (waitingRecipeList[i].timeRemaining <= 0f)
+            {
+                waitingRecipeList.RemoveAt(i);
+                failedRecipeCount++;
+                OnRecipeFailed?.Invoke(this, EventArgs.Empty);
+                OnRecipeComplete?.Invoke(this, EventArgs.Empty);
             }
         }
     }
 
     public void DeliveryRecipe(PlateKitchenObject plateKitchenObject)
     {
-        for (int i = 0; i < waitingRecipeSOList.Count; i++)
+        for (int i = 0; i < waitingRecipeList.Count; i++)
         {
-            RecipeSO waitingRecipeSO = waitingRecipeSOList[i];
+            RecipeSO waitingRecipeSO = waitingRecipeList[i].recipeSO;
 
             if (waitingRecipeSO.kitchenObjectSOList.Count == plateKitchenObject.GetKitchenObjectSOList().Count)
             {
@@ -61,23 +83,17 @@ public class DeliveryManager : MonoBehaviour
                     {
                         if (plateKitchenObjectSO == recipeKitchenObjectSO)
                         {
-                            
                             ingredientFound = true;
                             break;
                         }
                     }
-
-                    if (!ingredientFound)
-                    {
-                        plateContentsMatchesRecipe = false;
-                    }
-
+                    if (!ingredientFound) plateContentsMatchesRecipe = false;
                 }
 
                 if (plateContentsMatchesRecipe)
                 {
                     completeRecipeSOList.Add(waitingRecipeSO);
-                    waitingRecipeSOList.RemoveAt(i);
+                    waitingRecipeList.RemoveAt(i);
                     OnRecipeComplete?.Invoke(this, EventArgs.Empty);
                     OnRecipeSuccess?.Invoke(this, EventArgs.Empty);
                     return;
@@ -85,20 +101,18 @@ public class DeliveryManager : MonoBehaviour
             }
         }
 
-        if (waitingRecipeSOList.Count > 0)
+        if (waitingRecipeList.Count > 0)
+        {
             failedRecipeCount++;
-        OnRecipeFailed?.Invoke(this, EventArgs.Empty);
+            totalPenaltyPoints += WRONG_DELIVERY_PENALTY;
+            OnWrongDeliveryPenalty?.Invoke(this, EventArgs.Empty);
+            OnRecipeFailed?.Invoke(this, EventArgs.Empty);
+            OnRecipeComplete?.Invoke(this, EventArgs.Empty);
+        }
     }
 
-    public List<RecipeSO> GetCompleteRecipeSOList()
-  {
-    return completeRecipeSOList;
-  }
-
-    public List<RecipeSO> GetWaitingRecipeSOList()
-    {
-        return waitingRecipeSOList;
-    }
-
+    public List<WaitingRecipe> GetWaitingRecipeList() => waitingRecipeList;
+    public List<RecipeSO> GetCompleteRecipeSOList() => completeRecipeSOList;
     public int GetFailedRecipeCount() => failedRecipeCount;
+    public int GetTotalPenaltyPoints() => totalPenaltyPoints;
 }

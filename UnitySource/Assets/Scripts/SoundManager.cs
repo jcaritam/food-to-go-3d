@@ -14,6 +14,18 @@ public class SoundManager : MonoBehaviour
     Player.Instance.OnPickedSomething += Player_OnPickedSomething;
     BaseCounter.OnAnyObjectPlacedHere += BaseCounter_OnAnyObjectPlacedHere;
     TrashCounter.OnAnyObjectTrashed += TrashCounter_OnAnyObjectTrashed;
+    PlateKitchenObject.OnAnyIngredientRejected += PlateKitchenObject_OnAnyIngredientRejected;
+  }
+
+  private void OnDestroy()
+  {
+    PlateKitchenObject.OnAnyIngredientRejected -= PlateKitchenObject_OnAnyIngredientRejected;
+  }
+
+  private void PlateKitchenObject_OnAnyIngredientRejected(object sender, EventArgs e)
+  {
+    PlateKitchenObject plate = sender as PlateKitchenObject;
+    PlaySound(audioClipRefsSO.deliveryFail, plate.transform.position);
   }
 
   private void TrashCounter_OnAnyObjectTrashed(object sender, EventArgs e)

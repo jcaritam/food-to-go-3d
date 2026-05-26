@@ -34,6 +34,8 @@ public class StoveCounter : BaseCounter, IHasProgress
     }
     private void Update()
     {
+        if (!KitchenGameManager.Instance.IsGamePlaying()) return;
+
         if (HasKitchenObject())
         {
             switch (state)
