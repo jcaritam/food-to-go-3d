@@ -119,12 +119,12 @@ public class CloudProgressService : MonoBehaviour
     {
         if (unlockedLevels.Contains(levelIndex)) return;
         unlockedLevels.Add(levelIndex);
+        SyncBaseToLocal();
 
         try { await SaveBaseProgressAsync(); }
         catch (Exception e)
         {
-            Debug.LogWarning($"[CloudProgress] No se pudo guardar en nube: {e.Message}");
-            SyncBaseToLocal();
+            Debug.LogWarning($"[CloudProgress] No se pudo guardar unlock nivel {levelIndex} en nube: {e.Message}");
         }
     }
 

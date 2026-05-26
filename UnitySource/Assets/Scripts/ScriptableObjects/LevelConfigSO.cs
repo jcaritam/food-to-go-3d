@@ -4,6 +4,7 @@ using UnityEngine;
 public class LevelConfigSO : ScriptableObject
 {
     public int levelId;
+    public float gamePlayingTimerMax = 300f;
     public int starThreshold1;
     public int starThreshold2;
     public int starThreshold3;

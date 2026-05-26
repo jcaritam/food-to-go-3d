@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: LevelConfig_1
   m_EditorClassIdentifier: Assembly-CSharp::LevelConfigSO
   levelId: 1
-  starThreshold1: 100
-  starThreshold2: 220
-  starThreshold3: 350
+  gamePlayingTimerMax: 180
+  starThreshold1: 60
+  starThreshold2: 120
+  starThreshold3: 180
   requiredStarsToUnlock: 2
