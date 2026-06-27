@@ -125,3 +125,10 @@ UnitySource/docs/
 
 # macOS metadata
 **/.DS_Store
+
+# AI assistant directories (Claude, agents, skills, etc.)
+.claude/
+.agents/
+skills-lock.json
+GeneratedAssets/
+docs/

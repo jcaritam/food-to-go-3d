@@ -38,6 +38,15 @@ public class PotCounter : BaseCounter, IHasProgress
             switch (state)
             {
                 case State.Idle:
+                    BoilingRecipeSO recipe = GetBoilingRecipeSOWithInput(GetKitchenObject().GetKitChenObjectSO());
+                    if (recipe != null)
+                    {
+                        boilingRecipeSO = recipe;
+                        boilingTimer = 0f;
+                        state = State.Boiling;
+                        OnStateChanged?.Invoke(this, new OnStateChangedEventArgs { state = state });
+                        OnProgressChanged?.Invoke(this, new IHasProgress.OnProgressChangedEventArgs { progressNormalized = 0f });
+                    }
                     break;
                 case State.Boiling:
                     boilingTimer += Time.deltaTime;

@@ -9,7 +9,8 @@ public static class Loader
         LevelSelectScene,
         GameScene,
         HuariqueScene,
-        LoadingScene
+        LoadingScene,
+        ThirdScene
     }
     public static Scene targetScene;
 

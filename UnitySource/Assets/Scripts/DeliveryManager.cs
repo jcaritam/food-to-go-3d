@@ -101,14 +101,11 @@ public class DeliveryManager : MonoBehaviour
             }
         }
 
-        if (waitingRecipeList.Count > 0)
-        {
-            failedRecipeCount++;
-            totalPenaltyPoints += WRONG_DELIVERY_PENALTY;
-            OnWrongDeliveryPenalty?.Invoke(this, EventArgs.Empty);
-            OnRecipeFailed?.Invoke(this, EventArgs.Empty);
-            OnRecipeComplete?.Invoke(this, EventArgs.Empty);
-        }
+        failedRecipeCount++;
+        totalPenaltyPoints += WRONG_DELIVERY_PENALTY;
+        OnWrongDeliveryPenalty?.Invoke(this, EventArgs.Empty);
+        OnRecipeFailed?.Invoke(this, EventArgs.Empty);
+        OnRecipeComplete?.Invoke(this, EventArgs.Empty);
     }
 
     public List<WaitingRecipe> GetWaitingRecipeList() => waitingRecipeList;
