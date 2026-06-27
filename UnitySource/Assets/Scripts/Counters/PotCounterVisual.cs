@@ -11,6 +11,11 @@ public class PotCounterVisual : MonoBehaviour
         potCounter.OnStateChanged += PotCounter_OnStateChanged;
     }
 
+    private void OnDestroy()
+    {
+        potCounter.OnStateChanged -= PotCounter_OnStateChanged;
+    }
+
     private void PotCounter_OnStateChanged(object sender, PotCounter.OnStateChangedEventArgs e)
     {
         bool showVisual = e.state == PotCounter.State.Boiling || e.state == PotCounter.State.Boiled;

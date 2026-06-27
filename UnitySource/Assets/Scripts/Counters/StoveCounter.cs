@@ -41,6 +41,15 @@ public class StoveCounter : BaseCounter, IHasProgress
             switch (state)
             {
                 case State.Idle:
+                    FryingRecipeSO recipe = GetFryingRecipeSOWithInput(GetKitchenObject().GetKitChenObjectSO());
+                    if (recipe != null)
+                    {
+                        fryingRecipeSO = recipe;
+                        fryingTimer = 0f;
+                        state = State.Frying;
+                        OnStateChanged?.Invoke(this, new OnStateChangedEventArgs { state = state });
+                        OnProgressChanged?.Invoke(this, new IHasProgress.OnProgressChangedEventArgs { progressNormalized = 0f });
+                    }
                     break;
                 case State.Frying:
                     fryingTimer += Time.deltaTime;
@@ -172,6 +181,11 @@ public class StoveCounter : BaseCounter, IHasProgress
                 });
             }
         }
+    }
+
+    public bool CanAcceptThrownObject(KitchenObjectsSO kitchenObjectsSO)
+    {
+        return !HasKitchenObject() && HasRecipeWithInput(kitchenObjectsSO);
     }
 
     private bool HasRecipeWithInput(KitchenObjectsSO inputKitchenObjectSO)

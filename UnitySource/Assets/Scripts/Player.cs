@@ -16,8 +16,12 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     [Header("Movement Configuration")]
     [SerializeField] private float moveSpeed = 7f;
     [SerializeField] private float rotateSpeed = 10f;
+    [SerializeField] private float playerRadius = .7f;
+    [SerializeField] private float playerHeight = 2f;
+    [SerializeField] private LayerMask movementBlockingLayerMask;
     [SerializeField] private GameInput gameInput;
     [SerializeField] private LayerMask countersLayerMask;
+    [SerializeField] private LayerMask groundKitchenObjectLayerMask;
     [SerializeField] private Transform KitchenObjectHoldPoint;
 
     [Header("Dash Configuration")]
@@ -25,13 +29,24 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     [SerializeField] private float dashDuration = 0.2f;
     [SerializeField] private float dashCooldown = 1f;
 
+    [Header("Throw Configuration")]
+    [SerializeField] private float throwForwardSpeed = 6f;
+    [SerializeField] private float throwUpSpeed = 4f;
+
     private Vector3 lastInteractDir;
     private BaseCounter selectedCounter;
+    private KitchenObject selectedGroundKitchenObject;
     private KitchenObject kitchenObject;
+    [SerializeField] private Collider playerCollider;
 
     private float dashTimer = 0f;
     private float cooldownTimer = 0f;
     private bool isDashing = false;
+
+    private const float InteractHoldDuration = 3f;
+    private const float InteractHoldSearchRadius = 3f;
+    private float interactHoldTimer = 0f;
+    private bool holdPickupTriggered = false;
 
 
     private void Awake()
@@ -50,6 +65,16 @@ public class Player : MonoBehaviour, IKitchenObjectParent
         gameInput.OnInteractAlternateAction += GameInput_OnInteractAlternateAction;
         gameInput.OnDashAction += GameInput_OnDashAction;
         gameInput.OnPauseAction += GameInput_OnPauseAction;
+        gameInput.OnThrowAction += GameInput_OnThrowAction;
+    }
+
+    private void OnDestroy()
+    {
+        gameInput.OnInteractAction -= GameInput_OnInteractAction;
+        gameInput.OnInteractAlternateAction -= GameInput_OnInteractAlternateAction;
+        gameInput.OnDashAction -= GameInput_OnDashAction;
+        gameInput.OnPauseAction -= GameInput_OnPauseAction;
+        gameInput.OnThrowAction -= GameInput_OnThrowAction;
     }
 
     private void GameInput_OnPauseAction(object sender, EventArgs e)
@@ -86,10 +111,29 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     {
         if (!KitchenGameManager.Instance.IsGamePlaying()) return;
 
+        if (selectedGroundKitchenObject != null && !HasKitchenObject())
+        {
+            selectedGroundKitchenObject.SetKitchenObjectParent(this);
+            return;
+        }
+
         if (selectedCounter != null)
         {
             selectedCounter.Interact(this);
         }
+    }
+
+    private void GameInput_OnThrowAction(object sender, EventArgs e)
+    {
+        if (!KitchenGameManager.Instance.IsGamePlaying()) return;
+        if (!HasKitchenObject()) return;
+        if (kitchenObject is PlateKitchenObject) return;
+
+        Vector3 throwVelocity = transform.forward * throwForwardSpeed + Vector3.up * throwUpSpeed;
+        kitchenObject.LaunchAsProjectile(throwVelocity, playerCollider);
+        kitchenObject = null;
+        interactHoldTimer = 0f;
+        holdPickupTriggered = false;
     }
 
     private void Update()
@@ -97,6 +141,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
         HandleDashTimers();
         HandleMovementCharacter();
         HandleInteractions();
+        HandleInteractHold();
     }
 
     private void HandleDashTimers()
@@ -110,7 +155,6 @@ public class Player : MonoBehaviour, IKitchenObjectParent
             }
         }
 
-        // 2. Temporizador de Cooldown
         if (cooldownTimer > 0f)
         {
             cooldownTimer -= Time.deltaTime;
@@ -150,6 +194,63 @@ public class Player : MonoBehaviour, IKitchenObjectParent
         {
             SetSelectedCounter(null);
         }
+
+        KitchenObject detectedGroundObject = null;
+        if (Physics.SphereCast(transform.position, 0.4f, lastInteractDir, out RaycastHit groundHit, interactDistance, groundKitchenObjectLayerMask))
+        {
+            KitchenObject groundKO = groundHit.collider.GetComponentInParent<KitchenObject>();
+            if (groundKO != null && groundKO.IsOnGround())
+            {
+                detectedGroundObject = groundKO;
+            }
+        }
+        selectedGroundKitchenObject = detectedGroundObject;
+    }
+
+    private void HandleInteractHold()
+    {
+        if (!KitchenGameManager.Instance.IsGamePlaying()) return;
+        if (HasKitchenObject()) { interactHoldTimer = 0f; holdPickupTriggered = false; return; }
+
+        if (gameInput.IsInteractHeld())
+        {
+            interactHoldTimer += Time.deltaTime;
+            if (!holdPickupTriggered && interactHoldTimer >= InteractHoldDuration)
+            {
+                holdPickupTriggered = true;
+                TryPickupNearestGroundObject();
+            }
+        }
+        else
+        {
+            interactHoldTimer = 0f;
+            holdPickupTriggered = false;
+        }
+    }
+
+    private void TryPickupNearestGroundObject()
+    {
+        Collider[] hits = Physics.OverlapSphere(transform.position, InteractHoldSearchRadius, groundKitchenObjectLayerMask);
+
+        KitchenObject nearest = null;
+        float nearestDist = float.MaxValue;
+
+        foreach (Collider hit in hits)
+        {
+            KitchenObject ko = hit.GetComponentInParent<KitchenObject>();
+            if (ko != null && ko.IsOnGround())
+            {
+                float dist = Vector3.Distance(transform.position, ko.transform.position);
+                if (dist < nearestDist)
+                {
+                    nearestDist = dist;
+                    nearest = ko;
+                }
+            }
+        }
+
+        if (nearest != null)
+            nearest.SetKitchenObjectParent(this);
     }
 
     private void HandleMovementCharacter()
@@ -168,15 +269,12 @@ public class Player : MonoBehaviour, IKitchenObjectParent
         
         float moveDistance = currentMoveSpeed * Time.deltaTime;
 
-        float playerRadius = .7f;
-        float playerHeight = 2f;
-
-        bool canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, moveDir, moveDistance);
+        bool canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, moveDir, moveDistance, movementBlockingLayerMask);
 
         if (!canMove)
         {
             Vector3 moveDirX = new Vector3(moveDir.x, 0, 0).normalized;
-            canMove = moveDir.x != 0 && !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, moveDirX, moveDistance);
+            canMove = moveDir.x != 0 && !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, moveDirX, moveDistance, movementBlockingLayerMask);
 
             if (canMove)
             {
@@ -186,7 +284,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
             {
                 Vector3 moveDirZ = new Vector3(0, 0, moveDir.z).normalized;
 
-                canMove = moveDir.z != 0 && !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, moveDirZ, moveDistance);
+                canMove = moveDir.z != 0 && !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, moveDirZ, moveDistance, movementBlockingLayerMask);
 
                 if (canMove)
                 {
