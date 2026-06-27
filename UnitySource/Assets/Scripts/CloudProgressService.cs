@@ -19,6 +19,7 @@ public class CloudProgressService : MonoBehaviour
     private HashSet<int> unlockedLevels = new HashSet<int> { 1 };
     private int sessionsPlayed = 0;
     private Dictionary<int, LevelRecord> levelRecords = new Dictionary<int, LevelRecord>();
+    private HashSet<int> pendingCloudSync = new HashSet<int>();
 
     [Serializable]
     public class LevelRecord
@@ -71,7 +72,21 @@ public class CloudProgressService : MonoBehaviour
         if (result.TryGetValue(KeySessionsPlayed, out var sessionsItem))
             sessionsPlayed = sessionsItem.Value.GetAs<int>();
 
+        foreach (var pending in pendingCloudSync)
+            unlockedLevels.Add(pending);
+
         SyncBaseToLocal();
+
+        bool hadPending = pendingCloudSync.Count > 0;
+        pendingCloudSync.Clear();
+        if (hadPending)
+        {
+            try { await SaveBaseProgressAsync(); }
+            catch (Exception e)
+            {
+                Debug.LogWarning($"[CloudProgress] No se pudo sincronizar niveles pendientes: {e.Message}");
+            }
+        }
 
         var recordKeys = new HashSet<string>();
         foreach (var levelId in unlockedLevels)
@@ -124,6 +139,7 @@ public class CloudProgressService : MonoBehaviour
         try { await SaveBaseProgressAsync(); }
         catch (Exception e)
         {
+            pendingCloudSync.Add(levelIndex);
             Debug.LogWarning($"[CloudProgress] No se pudo guardar unlock nivel {levelIndex} en nube: {e.Message}");
         }
     }

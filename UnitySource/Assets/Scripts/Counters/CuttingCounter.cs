@@ -91,6 +91,11 @@ public class CuttingCounter : BaseCounter, IHasProgress
         }
     }
 
+    public bool CanAcceptThrownObject(KitchenObjectsSO kitchenObjectsSO)
+    {
+        return !HasKitchenObject() && HasRecipeWithInput(kitchenObjectsSO);
+    }
+
     private bool HasRecipeWithInput(KitchenObjectsSO inputKitchenObjectSO)
     {
         CuttingRecipeSO cuttingRecipeSO = GetCuttingRecipeSOWithInput(inputKitchenObjectSO);

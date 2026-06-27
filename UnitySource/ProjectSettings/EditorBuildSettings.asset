@@ -20,6 +20,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/HuariqueScene.unity
     guid: c1e89900aa2c69874bd4eb23a8b12f36
+  - enabled: 1
+    path: Assets/Scenes/ThirdScene.unity
+    guid: c9d8472f485594b089ace59cf5d04edc
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0

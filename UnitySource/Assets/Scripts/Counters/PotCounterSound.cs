@@ -16,6 +16,11 @@ public class PotCounterSound : MonoBehaviour
         potCounter.OnStateChanged += PotCounter_OnStateChanged;
     }
 
+    private void OnDestroy()
+    {
+        potCounter.OnStateChanged -= PotCounter_OnStateChanged;
+    }
+
     private void PotCounter_OnStateChanged(object sender, PotCounter.OnStateChangedEventArgs e)
     {
         bool playSound = e.state == PotCounter.State.Boiling || e.state == PotCounter.State.Boiled;

@@ -60,6 +60,8 @@ public class KitchenGameManager : MonoBehaviour
                 if (gamePlayingTimer < 0f)
                 {
                     state = State.GAME_OVER;
+                    isGamePaused = false;
+                    Time.timeScale = 1f;
                     OnStateChanged?.Invoke(this, EventArgs.Empty);
                 }
                 break;
