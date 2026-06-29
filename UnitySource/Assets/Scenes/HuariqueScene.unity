@@ -5931,7 +5931,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c874dfe688da9ee1f88a9318f76262bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  recipeListSO: {fileID: 11400000, guid: 83102dbc57779d543b7d6571ca7d79aa, type: 2}
+  recipeListSO: {fileID: 11400000, guid: 7a60881c134474f028e585b808cf2f60, type: 2}
   recipeTimeMax: 60
 --- !u!4 &1792178608
 Transform:

@@ -19,12 +19,23 @@ public class SoundManager : MonoBehaviour
 
   private void OnDestroy()
   {
+    if (DeliveryManager.Instance != null)
+    {
+      DeliveryManager.Instance.OnRecipeSuccess -= DeliveryManager_OnRecipeSuccess;
+      DeliveryManager.Instance.OnRecipeFailed -= DeliveryManager_OnRecipeFailed;
+    }
+    CuttingCounter.OnAnyCut -= CuttingCounter_OnAnyCut;
+    if (Player.Instance != null)
+      Player.Instance.OnPickedSomething -= Player_OnPickedSomething;
+    BaseCounter.OnAnyObjectPlacedHere -= BaseCounter_OnAnyObjectPlacedHere;
+    TrashCounter.OnAnyObjectTrashed -= TrashCounter_OnAnyObjectTrashed;
     PlateKitchenObject.OnAnyIngredientRejected -= PlateKitchenObject_OnAnyIngredientRejected;
   }
 
   private void PlateKitchenObject_OnAnyIngredientRejected(object sender, EventArgs e)
   {
     PlateKitchenObject plate = sender as PlateKitchenObject;
+    if (plate == null) return;
     PlaySound(audioClipRefsSO.deliveryFail, plate.transform.position);
   }
 
