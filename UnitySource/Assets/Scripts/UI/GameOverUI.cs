@@ -96,7 +96,7 @@ public class GameOverUI : MonoBehaviour
         }
 
         if (errorsText != null)
-            errorsText.text = DeliveryManager.Instance.GetFailedRecipeCount().ToString();
+            errorsText.text = DeliveryManager.Instance.GetWrongDeliveryCount().ToString();
 
         UpdateStarImages(stars);
 
