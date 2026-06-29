@@ -28,6 +28,7 @@ public class DeliveryManager : MonoBehaviour
     private float spawnRecipeTimerMax = 4f;
     private int waitingRecipeMax = 4;
     private int failedRecipeCount;
+    private int wrongDeliveryCount;
     private int totalPenaltyPoints;
     private const int WRONG_DELIVERY_PENALTY = 20;
 
@@ -101,7 +102,7 @@ public class DeliveryManager : MonoBehaviour
             }
         }
 
-        failedRecipeCount++;
+        wrongDeliveryCount++;
         totalPenaltyPoints += WRONG_DELIVERY_PENALTY;
         OnWrongDeliveryPenalty?.Invoke(this, EventArgs.Empty);
         OnRecipeFailed?.Invoke(this, EventArgs.Empty);
@@ -111,5 +112,6 @@ public class DeliveryManager : MonoBehaviour
     public List<WaitingRecipe> GetWaitingRecipeList() => waitingRecipeList;
     public List<RecipeSO> GetCompleteRecipeSOList() => completeRecipeSOList;
     public int GetFailedRecipeCount() => failedRecipeCount;
+    public int GetWrongDeliveryCount() => wrongDeliveryCount;
     public int GetTotalPenaltyPoints() => totalPenaltyPoints;
 }

@@ -151,6 +151,11 @@ public class PotCounter : BaseCounter, IHasProgress
         }
     }
 
+    public bool CanAcceptThrownObject(KitchenObjectsSO kitchenObjectsSO)
+    {
+        return !HasKitchenObject() && HasRecipeWithInput(kitchenObjectsSO);
+    }
+
     private bool HasRecipeWithInput(KitchenObjectsSO inputKitchenObjectSO)
     {
         BoilingRecipeSO boilingRecipeSO = GetBoilingRecipeSOWithInput(inputKitchenObjectSO);

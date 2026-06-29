@@ -154,7 +154,7 @@ public class KitchenObject : MonoBehaviour
             case StoveCounter stove:
                 return stove.CanAcceptThrownObject(kitchenObjectsSO);
             case PotCounter pot:
-                return !pot.HasKitchenObject();
+                return pot.CanAcceptThrownObject(kitchenObjectsSO);
             default:
                 return false;
         }

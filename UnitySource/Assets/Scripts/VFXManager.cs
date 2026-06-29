@@ -36,7 +36,8 @@ public class VFXManager : MonoBehaviour
     private void Start()
     {
         subscribedDeliveryManager = DeliveryManager.Instance;
-        subscribedDeliveryManager.OnRecipeSuccess += DeliveryManager_OnRecipeSuccess;
+        if (subscribedDeliveryManager != null)
+            subscribedDeliveryManager.OnRecipeSuccess += DeliveryManager_OnRecipeSuccess;
         CuttingCounter.OnAnyCut += CuttingCounter_OnAnyCut;
     }
 
