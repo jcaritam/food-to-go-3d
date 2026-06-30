@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99d181a4b1f040699933c7f3300561a2, type: 3}
   m_Name: Papa
   m_EditorClassIdentifier:
-  prefab: {fileID: 0}
-  sprite: {fileID: 0}
+  prefab: {fileID: 4030907981830165977, guid: d95def4541d4d48d29d6814c3fc7296f, type: 3}
+  sprite: {fileID: 21300000, guid: 3a8fbb060ec37440fa9c7645f792dad7, type: 3}
   objectName: papa

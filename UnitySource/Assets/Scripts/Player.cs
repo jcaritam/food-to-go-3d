@@ -24,10 +24,9 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     [SerializeField] private LayerMask groundKitchenObjectLayerMask;
     [SerializeField] private Transform KitchenObjectHoldPoint;
 
-    [Header("Dash Configuration")]
-    [SerializeField] private float dashSpeedMultiplier = 3f;
-    [SerializeField] private float dashDuration = 0.2f;
-    [SerializeField] private float dashCooldown = 1f;
+    [Header("Jump Configuration")]
+    [SerializeField] private float jumpForce = 8f;
+    [SerializeField] private float gravity = -20f;
 
     [Header("Throw Configuration")]
     [SerializeField] private float throwForwardSpeed = 6f;
@@ -39,9 +38,9 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     private KitchenObject kitchenObject;
     [SerializeField] private Collider playerCollider;
 
-    private float dashTimer = 0f;
-    private float cooldownTimer = 0f;
-    private bool isDashing = false;
+    private float verticalVelocity = 0f;
+    private bool isGrounded = true;
+    private float groundLevelY;
 
     private const float InteractHoldDuration = 3f;
     private const float InteractHoldSearchRadius = 3f;
@@ -56,6 +55,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
             Debug.LogError("instance error - null");
         }
         Instance = this;
+        groundLevelY = transform.position.y;
     }
 
 
@@ -63,7 +63,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     {
         gameInput.OnInteractAction += GameInput_OnInteractAction;
         gameInput.OnInteractAlternateAction += GameInput_OnInteractAlternateAction;
-        gameInput.OnDashAction += GameInput_OnDashAction;
+        gameInput.OnDashAction += GameInput_OnJumpAction;
         gameInput.OnPauseAction += GameInput_OnPauseAction;
         gameInput.OnThrowAction += GameInput_OnThrowAction;
     }
@@ -72,7 +72,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     {
         gameInput.OnInteractAction -= GameInput_OnInteractAction;
         gameInput.OnInteractAlternateAction -= GameInput_OnInteractAlternateAction;
-        gameInput.OnDashAction -= GameInput_OnDashAction;
+        gameInput.OnDashAction -= GameInput_OnJumpAction;
         gameInput.OnPauseAction -= GameInput_OnPauseAction;
         gameInput.OnThrowAction -= GameInput_OnThrowAction;
     }
@@ -82,18 +82,14 @@ public class Player : MonoBehaviour, IKitchenObjectParent
         KitchenGameManager.Instance.TogglePause();
     }
 
-    private void GameInput_OnDashAction(object sender, EventArgs e)
+    private void GameInput_OnJumpAction(object sender, EventArgs e)
     {
         if (!KitchenGameManager.Instance.IsGamePlaying()) return;
 
-        if (!isDashing && cooldownTimer <= 0f)
+        if (isGrounded)
         {
-            Vector2 inputVector = gameInput.GetMovementVectorNormalized();
-            
-            if (inputVector != Vector2.zero || lastInteractDir != Vector3.zero)
-            {
-                StartDash();
-            }
+            verticalVelocity = jumpForce;
+            isGrounded = false;
         }
     }
 
@@ -138,27 +134,29 @@ public class Player : MonoBehaviour, IKitchenObjectParent
 
     private void Update()
     {
-        HandleDashTimers();
+        HandleJump();
         HandleMovementCharacter();
         HandleInteractions();
         HandleInteractHold();
     }
 
-    private void HandleDashTimers()
+    private void HandleJump()
     {
-        if (isDashing)
+        if (KitchenGameManager.Instance.IsGamePaused()) return;
+        if (isGrounded && verticalVelocity == 0f) return;
+
+        verticalVelocity += gravity * Time.deltaTime;
+
+        float newY = transform.position.y + verticalVelocity * Time.deltaTime;
+
+        if (newY <= groundLevelY)
         {
-            dashTimer -= Time.deltaTime;
-            if (dashTimer <= 0f)
-            {
-                isDashing = false;
-            }
+            newY = groundLevelY;
+            verticalVelocity = 0f;
+            isGrounded = true;
         }
 
-        if (cooldownTimer > 0f)
-        {
-            cooldownTimer -= Time.deltaTime;
-        }
+        transform.position = new Vector3(transform.position.x, newY, transform.position.z);
     }
 
     private void HandleInteractions()
@@ -262,11 +260,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
         Vector3 moveDir = new Vector3(inputVector.x, 0f, inputVector.y);
 
         float currentMoveSpeed = moveSpeed;
-        if (isDashing)
-        {
-            currentMoveSpeed *= dashSpeedMultiplier;
-        }
-        
+
         float moveDistance = currentMoveSpeed * Time.deltaTime;
 
         bool canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, moveDir, moveDistance, movementBlockingLayerMask);
@@ -307,13 +301,6 @@ public class Player : MonoBehaviour, IKitchenObjectParent
                 );
 
         }
-    }
-
-    private void StartDash()
-    {
-        isDashing = true;
-        dashTimer = dashDuration;
-        cooldownTimer = dashCooldown;
     }
 
     private void SetSelectedCounter(BaseCounter selectedCounter)

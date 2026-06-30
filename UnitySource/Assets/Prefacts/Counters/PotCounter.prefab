@@ -405,3 +405,4 @@ MonoBehaviour:
   counterTopPoint: {fileID: 930261318534478708}
   boilingRecipeSOArray:
   - {fileID: 11400000, guid: 5e4ffb54888848afa7eb88b780cb2de0, type: 2}
+  - {fileID: 11400000, guid: 9b7ab389e69f41a086094888c4c757cc, type: 2}
