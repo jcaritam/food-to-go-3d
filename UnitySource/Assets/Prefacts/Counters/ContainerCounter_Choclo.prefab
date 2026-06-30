@@ -1,0 +1,95 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &5500000001
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1226463142788968019, guid: d56571d860084d663ac5f1bf5dc4d588, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: ea3b3f6f9dc3443489d0f32426d3d8fa, type: 3}
+    - target: {fileID: 4586528062762882915, guid: d56571d860084d663ac5f1bf5dc4d588, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: ea3b3f6f9dc3443489d0f32426d3d8fa, type: 3}
+    - target: {fileID: 5034887589210968157, guid: d56571d860084d663ac5f1bf5dc4d588, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5034887589210968157, guid: d56571d860084d663ac5f1bf5dc4d588, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5034887589210968157, guid: d56571d860084d663ac5f1bf5dc4d588, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5034887589210968157, guid: d56571d860084d663ac5f1bf5dc4d588, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5034887589210968157, guid: d56571d860084d663ac5f1bf5dc4d588, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5034887589210968157, guid: d56571d860084d663ac5f1bf5dc4d588, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5034887589210968157, guid: d56571d860084d663ac5f1bf5dc4d588, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5034887589210968157, guid: d56571d860084d663ac5f1bf5dc4d588, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5034887589210968157, guid: d56571d860084d663ac5f1bf5dc4d588, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5034887589210968157, guid: d56571d860084d663ac5f1bf5dc4d588, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5815369251782548490, guid: d56571d860084d663ac5f1bf5dc4d588, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.207
+      objectReference: {fileID: 0}
+    - target: {fileID: 5815369251782548490, guid: d56571d860084d663ac5f1bf5dc4d588, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.002
+      objectReference: {fileID: 0}
+    - target: {fileID: 5815369251782548490, guid: d56571d860084d663ac5f1bf5dc4d588, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.035
+      objectReference: {fileID: 0}
+    - target: {fileID: 6368852917696072042, guid: d56571d860084d663ac5f1bf5dc4d588, type: 3}
+      propertyPath: kitchenObjectsSO
+      value: 
+      objectReference: {fileID: 11400000, guid: c3d9c11df9b347d4a165e8f4ee8a0463, type: 2}
+    - target: {fileID: 7792026822051863558, guid: d56571d860084d663ac5f1bf5dc4d588, type: 3}
+      propertyPath: m_Name
+      value: ContainerCounter_Choclo
+      objectReference: {fileID: 0}
+    - target: {fileID: 9085885563653219642, guid: d56571d860084d663ac5f1bf5dc4d588, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.218
+      objectReference: {fileID: 0}
+    - target: {fileID: 9085885563653219642, guid: d56571d860084d663ac5f1bf5dc4d588, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.002
+      objectReference: {fileID: 0}
+    - target: {fileID: 9085885563653219642, guid: d56571d860084d663ac5f1bf5dc4d588, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.035
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: d56571d860084d663ac5f1bf5dc4d588, type: 3}
