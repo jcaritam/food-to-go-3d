@@ -52,7 +52,7 @@ MonoBehaviour:
   playerHeight: 2
   movementBlockingLayerMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 1
   gameInput: {fileID: 0}
   countersLayerMask:
     serializedVersion: 2
