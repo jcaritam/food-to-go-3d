@@ -19,6 +19,15 @@ public class PointCounterUI : MonoBehaviour
         DeliveryManager.Instance.OnWrongDeliveryPenalty += DeliveryManager_OnWrongDeliveryPenalty;
     }
 
+    private void OnDestroy()
+    {
+        if (DeliveryManager.Instance != null)
+        {
+            DeliveryManager.Instance.OnRecipeComplete -= DeliveryManager_OnRecipeComplete;
+            DeliveryManager.Instance.OnWrongDeliveryPenalty -= DeliveryManager_OnWrongDeliveryPenalty;
+        }
+    }
+
     private void DeliveryManager_OnRecipeComplete(object sender, EventArgs e)
     {
         RefreshScore();

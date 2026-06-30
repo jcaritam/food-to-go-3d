@@ -5,7 +5,7 @@ public static class LevelProgressData
     public static bool IsLevelUnlocked(int levelIndex)
     {
         if (levelIndex == 1) return true;
-        if (CloudProgressService.Instance != null)
+        if (CloudProgressService.Instance != null && CloudProgressService.Instance.IsReady)
             return CloudProgressService.Instance.IsLevelUnlocked(levelIndex);
         var csv = PlayerPrefs.GetString("unlocked_levels", "1");
         foreach (var part in csv.Split(','))

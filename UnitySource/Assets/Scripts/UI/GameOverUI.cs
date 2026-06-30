@@ -30,7 +30,19 @@ public class GameOverUI : MonoBehaviour
             {
                 Time.timeScale = 1f;
                 int id = KitchenGameManager.Instance != null ? KitchenGameManager.Instance.levelId : 1;
-                Loader.Scene scene = id == 2 ? Loader.Scene.HuariqueScene : Loader.Scene.GameScene;
+                Loader.Scene scene;
+                switch (id)
+                {
+                    case 2:
+                        scene = Loader.Scene.HuariqueScene;
+                        break;
+                    case 3:
+                        scene = Loader.Scene.ThirdScene;
+                        break;
+                    default:
+                        scene = Loader.Scene.GameScene;
+                        break;
+                }
                 Loader.Load(scene);
             });
     }
@@ -84,7 +96,7 @@ public class GameOverUI : MonoBehaviour
         }
 
         if (errorsText != null)
-            errorsText.text = DeliveryManager.Instance.GetFailedRecipeCount().ToString();
+            errorsText.text = DeliveryManager.Instance.GetWrongDeliveryCount().ToString();
 
         UpdateStarImages(stars);
 
