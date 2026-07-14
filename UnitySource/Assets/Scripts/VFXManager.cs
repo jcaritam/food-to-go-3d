@@ -49,7 +49,7 @@ public class VFXManager : MonoBehaviour
         CuttingCounter.OnAnyCut -= CuttingCounter_OnAnyCut;
     }
 
-    private void DeliveryManager_OnRecipeSuccess(object sender, EventArgs e)
+    private void DeliveryManager_OnRecipeSuccess(object sender, DeliveryManager.OnRecipeEventArgs e)
     {
         if (DeliveryCounter.Instance == null) return;
         PlayDeliverySuccess(DeliveryCounter.Instance.transform.position + deliveryOffset);

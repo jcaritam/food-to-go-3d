@@ -8,6 +8,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4843865514592750403, guid: d56571d860084d663ac5f1bf5dc4d588, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.02
+      objectReference: {fileID: 0}
     - target: {fileID: 5034887589210968157, guid: d56571d860084d663ac5f1bf5dc4d588, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -55,6 +59,10 @@ PrefabInstance:
     - target: {fileID: 7792026822051863558, guid: d56571d860084d663ac5f1bf5dc4d588, type: 3}
       propertyPath: m_Name
       value: ContainerCounter_Cheese
+      objectReference: {fileID: 0}
+    - target: {fileID: 7897912176177640051, guid: d56571d860084d663ac5f1bf5dc4d588, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.02
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

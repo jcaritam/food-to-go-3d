@@ -17,14 +17,31 @@ public class DynamicBlockade : MonoBehaviour
   private Vector3 endPosition;
   [SerializeField] private float heightOffset = 2f;
 
+  // Colliders de los counters hijos que forman el bloqueo físico.
+  // Se desactivan mientras el obstáculo está escondido para que el jugador
+  // pueda atravesar la zona (antes, parte del collider quedaba asomando
+  // sobre el suelo aunque el objeto ya estuviera "abajo").
+  private Collider[] blockingColliders;
+
   private void Start()
   {
     endPosition = transform.position;
     Vector3 startPosition = endPosition - new Vector3(0f, heightOffset, 0f);
 
+    blockingColliders = GetComponentsInChildren<Collider>(true);
+
     transform.position = startPosition;
+    SetCollidersEnabled(false);
 
     StartCoroutine(BlockadeCycle(startPosition, endPosition));
+  }
+
+  private void SetCollidersEnabled(bool isEnabled)
+  {
+    foreach (Collider col in blockingColliders)
+    {
+      col.enabled = isEnabled;
+    }
   }
 
   private IEnumerator BlockadeCycle(Vector3 startPos, Vector3 endPos)
@@ -34,10 +51,12 @@ public class DynamicBlockade : MonoBehaviour
     while (true)
     {
       yield return StartCoroutine(MoveBlockade(startPos, endPos, transitionDuration));
+      SetCollidersEnabled(true);
 
       float currentVisibleTime = Random.Range(minTimeVisible, maxTimeVisible);
       yield return new WaitForSeconds(currentVisibleTime);
 
+      SetCollidersEnabled(false);
       yield return StartCoroutine(MoveBlockade(endPos, startPos, transitionDuration));
 
       float currentHiddenTime = Random.Range(minTimeHidden, maxTimeHidden);

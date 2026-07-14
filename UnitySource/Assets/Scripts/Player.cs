@@ -41,6 +41,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     private float verticalVelocity = 0f;
     private bool isGrounded = true;
     private float groundLevelY;
+    private Vector3 externalDisplacement;
 
     private const float InteractHoldDuration = 3f;
     private const float InteractHoldSearchRadius = 3f;
@@ -138,6 +139,39 @@ public class Player : MonoBehaviour, IKitchenObjectParent
         HandleMovementCharacter();
         HandleInteractions();
         HandleInteractHold();
+    }
+
+    private void LateUpdate()
+    {
+        HandleExternalDisplacement();
+    }
+
+    public void ApplyExternalDisplacement(Vector3 displacement)
+    {
+        if (!KitchenGameManager.Instance.IsGamePlaying()) return;
+        if (displacement == Vector3.zero) return;
+
+        externalDisplacement += displacement;
+    }
+
+    private void HandleExternalDisplacement()
+    {
+        if (externalDisplacement == Vector3.zero) return;
+
+        Vector3 push = externalDisplacement;
+        externalDisplacement = Vector3.zero;
+
+        float pushDistance = push.magnitude;
+        Vector3 pushDir = push / pushDistance;
+
+        bool blocked = Physics.CapsuleCast(
+            transform.position,
+            transform.position + Vector3.up * playerHeight,
+            playerRadius, pushDir, pushDistance, movementBlockingLayerMask);
+
+        if (blocked) return;
+
+        transform.position += push;
     }
 
     private void HandleJump()

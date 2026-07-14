@@ -82,6 +82,22 @@ public class KitchenObject : MonoBehaviour
         return isOnGround;
     }
 
+    // Suelta el objeto en el suelo sin lanzarlo como proyectil: se usa cuando
+    // el IKitchenObjectParent que lo sostenía (ej. una mesa) desaparece y el
+    // ingrediente debe quedar recuperable en vez de destruirse con su dueño.
+    public void DropToGround()
+    {
+        if (kitchenObjectParent != null)
+        {
+            kitchenObjectParent.ClearKitchenObject();
+            kitchenObjectParent = null;
+        }
+
+        transform.parent = null;
+        StopAllCoroutines();
+        StartCoroutine(SettleOnGround());
+    }
+
     public void LaunchAsProjectile(Vector3 initialVelocity, Collider playerCollider)
     {
         if (kitchenObjectParent != null)

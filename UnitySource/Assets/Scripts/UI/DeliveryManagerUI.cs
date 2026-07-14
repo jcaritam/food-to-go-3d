@@ -26,7 +26,7 @@ public class DeliveryManagerUI : MonoBehaviour
         UpdateVisual();
     }
 
-    private void DeliveryManager_OnRecipeSpawned(object sender, EventArgs e)
+    private void DeliveryManager_OnRecipeSpawned(object sender, DeliveryManager.OnRecipeEventArgs e)
     {
         UpdateVisual();
     }

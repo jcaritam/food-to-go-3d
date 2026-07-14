@@ -11,10 +11,15 @@ public class DeliveryManager : MonoBehaviour
         public float timeMax;
     }
 
-    public event EventHandler OnRecipeSpawned;
+    public class OnRecipeEventArgs : EventArgs
+    {
+        public WaitingRecipe waitingRecipe;
+    }
+
+    public event EventHandler<OnRecipeEventArgs> OnRecipeSpawned;
     public event EventHandler OnRecipeComplete;
-    public event EventHandler OnRecipeSuccess;
-    public event EventHandler OnRecipeFailed;
+    public event EventHandler<OnRecipeEventArgs> OnRecipeSuccess;
+    public event EventHandler<OnRecipeEventArgs> OnRecipeFailed;
     public event EventHandler OnWrongDeliveryPenalty;
 
     public static DeliveryManager Instance { get; private set; }
@@ -50,8 +55,9 @@ public class DeliveryManager : MonoBehaviour
             if (waitingRecipeList.Count < waitingRecipeMax)
             {
                 RecipeSO recipeSO = recipeListSO.recipeSOList[UnityEngine.Random.Range(0, recipeListSO.recipeSOList.Count)];
-                waitingRecipeList.Add(new WaitingRecipe { recipeSO = recipeSO, timeRemaining = recipeTimeMax, timeMax = recipeTimeMax });
-                OnRecipeSpawned?.Invoke(this, EventArgs.Empty);
+                WaitingRecipe waitingRecipe = new WaitingRecipe { recipeSO = recipeSO, timeRemaining = recipeTimeMax, timeMax = recipeTimeMax };
+                waitingRecipeList.Add(waitingRecipe);
+                OnRecipeSpawned?.Invoke(this, new OnRecipeEventArgs { waitingRecipe = waitingRecipe });
             }
         }
 
@@ -60,9 +66,10 @@ public class DeliveryManager : MonoBehaviour
             waitingRecipeList[i].timeRemaining -= Time.deltaTime;
             if (waitingRecipeList[i].timeRemaining <= 0f)
             {
+                WaitingRecipe expiredRecipe = waitingRecipeList[i];
                 waitingRecipeList.RemoveAt(i);
                 failedRecipeCount++;
-                OnRecipeFailed?.Invoke(this, EventArgs.Empty);
+                OnRecipeFailed?.Invoke(this, new OnRecipeEventArgs { waitingRecipe = expiredRecipe });
                 OnRecipeComplete?.Invoke(this, EventArgs.Empty);
             }
         }
@@ -72,7 +79,8 @@ public class DeliveryManager : MonoBehaviour
     {
         for (int i = 0; i < waitingRecipeList.Count; i++)
         {
-            RecipeSO waitingRecipeSO = waitingRecipeList[i].recipeSO;
+            WaitingRecipe waitingRecipe = waitingRecipeList[i];
+            RecipeSO waitingRecipeSO = waitingRecipe.recipeSO;
 
             if (waitingRecipeSO.kitchenObjectSOList.Count == plateKitchenObject.GetKitchenObjectSOList().Count)
             {
@@ -96,7 +104,7 @@ public class DeliveryManager : MonoBehaviour
                     completeRecipeSOList.Add(waitingRecipeSO);
                     waitingRecipeList.RemoveAt(i);
                     OnRecipeComplete?.Invoke(this, EventArgs.Empty);
-                    OnRecipeSuccess?.Invoke(this, EventArgs.Empty);
+                    OnRecipeSuccess?.Invoke(this, new OnRecipeEventArgs { waitingRecipe = waitingRecipe });
                     return;
                 }
             }
@@ -105,7 +113,7 @@ public class DeliveryManager : MonoBehaviour
         wrongDeliveryCount++;
         totalPenaltyPoints += WRONG_DELIVERY_PENALTY;
         OnWrongDeliveryPenalty?.Invoke(this, EventArgs.Empty);
-        OnRecipeFailed?.Invoke(this, EventArgs.Empty);
+        OnRecipeFailed?.Invoke(this, new OnRecipeEventArgs { waitingRecipe = null });
         OnRecipeComplete?.Invoke(this, EventArgs.Empty);
     }
 

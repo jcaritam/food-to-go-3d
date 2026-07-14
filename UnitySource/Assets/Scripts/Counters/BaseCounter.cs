@@ -9,6 +9,18 @@ public class BaseCounter : MonoBehaviour, IKitchenObjectParent
     [SerializeField] private Transform counterTopPoint;
 
     private KitchenObject kitchenObject;
+
+    // Si el counter/mesa desaparece mientras sostiene un ingrediente, este
+    // no debe destruirse en cascada junto con el Transform padre: se
+    // desprende y se deja caer al suelo para que el jugador pueda recogerlo.
+    private void OnDestroy()
+    {
+        if (kitchenObject != null)
+        {
+            kitchenObject.DropToGround();
+        }
+    }
+
     public virtual void Interact(Player player)
     {
         Debug.Log("BAseCounter.Interact");
